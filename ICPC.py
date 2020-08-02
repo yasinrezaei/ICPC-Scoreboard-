@@ -29,6 +29,16 @@ while(line):
 L=var_list[14:len(var_list)-2]
  
 List2=eval(L)
+#--------------------------------------------------------
+for i in range(5,17):
+    for j in range(len(List1)):
+        if(type(List1[j][i])==list):
+            if(List1[j][i][1]=='no'):
+                List1[j][i]=0
+            else:
+                s=List1[j][i][0].split('/')
+                if(int(s[1])>T):
+                    List1[j][i]=0
 #-------------------create combined list of 2 scoreboards----
 combined_list=List1+List2
 #---------------------if not in time------------------------
@@ -40,6 +50,7 @@ for i in range(5,17):
                     s[1]='--'
                     combined_list[j][i][0]=s[0]+'/'+s[1]
                     combined_list[j][i][1]='no'
+                   
 #---------------------set yes first--------------------------
 for i in range(5,17):
     yes_first=T
@@ -50,7 +61,8 @@ for i in range(5,17):
             if(combined_list[j][i][1]=='yes first' and int(s[1])<yes_first):
                 yes_first=int(s[1])
                 index=j
-    combined_list[index][i][1]='yes first'
+    if(type(combined_list[index][i])==list):
+        combined_list[index][i][1]='yes first'
     for j in range(len(combined_list)):
         if(type(combined_list[j][i])==list):
             s=combined_list[j][i][0].split('/')
@@ -62,12 +74,23 @@ for i in range(len(combined_list)):
     for j in range(5,17):
         if(type(combined_list[i][j])==list ):
             s=combined_list[i][j][0].split('/')
-            if(s[1]!="--"):
+            if(s[1]!="--" and (combined_list[i][j][1]=='yes' or combined_list[i][j][1]=='yes first')):
                 a=int(s[0])
                 t=int(s[1])
                 penalty+=t+(a-1)*20
     combined_list[i][3]=penalty
+#--------------------------------------solved----------------------
+for i in range(len(combined_list)):
+    solved=0
+    for j in range(5,17):
+        if(type(combined_list[i][j])==list ):
+            s=combined_list[i][j][0].split('/')
+            if(s[1]!="--" and (combined_list[i][j][1]=='yes' or combined_list[i][j][1]=='yes first')):
+                solved+=1
+        
+    combined_list[i][2]=solved
 
+#--------------------------------------------------------------------
 
 #sort by count of solvedproblems --> penalty --> alphabet
 
@@ -114,11 +137,3 @@ while(line):
     else:
         combined_file.write(line)
     line=sb1.readline()
-
-
-        
-        
-
-
-
-    
